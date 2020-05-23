@@ -1,6 +1,6 @@
-import "core-js/stable";
-import React from "react";
-import ReactDom from "react-dom";
-import App from "./containers/app";
+import 'core-js/stable'
+import React from 'react'
+import ReactDom from 'react-dom'
+import App from './containers/app'
 
-ReactDom.render(<App />, document.getElementById("root") as HTMLElement);
+ReactDom.render(<App />, document.getElementById('root') as HTMLElement)

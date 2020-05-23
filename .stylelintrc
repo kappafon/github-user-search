@@ -1,0 +1,25 @@
+{
+    "extends": ["stylelint-config-sass-guidelines", "stylelint-scss", "stylelint-config-rational-order", "stylelint-config-prettier"],
+    "defaultSeverity": "error",
+    "plugins": [
+        "stylelint-selector-bem-pattern", 
+        "stylelint-scss",
+        "stylelint-order", 
+        "stylelint-config-rational-order/plugin"
+        ],
+    "rules": {
+        'order/properties-order': [[], { severity: 'warning' }],
+        "plugin/rational-order": [
+            true, {
+            "border-in-box-model": false,
+            "empty-line-between-groups": true
+        }],
+        "order/properties-alphabetical-order": null,
+        "at-rule-no-unknown": null,
+        "declaration-empty-line-before": null,
+        "max-line-length": [100, { "ignore": ["comments"] }],
+        "no-missing-end-of-source-newline": null,
+        "selector-class-pattern": null,
+        "property-no-vendor-prefix": null
+    }
+}
