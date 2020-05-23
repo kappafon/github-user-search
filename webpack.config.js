@@ -8,12 +8,31 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(ts|tsx)$/,
+                test: /\.js$/,
                 exclude: /node_modules/,
-                include: path.join(__dirname, 'src'),
-                use: {
-                    loader: 'babel-loader',
-                },
+                loader: ['babel-loader', 'eslint-loader'],
+            },
+            {
+                test: /\.ts(x?)$/,
+                exclude: /node_modules/,
+                use: [{ loader: 'ts-loader' }, { loader: 'eslint-loader' }],
+            },
+            {
+                test: /\.css$/,
+                use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+            },
+            {
+                test: /\.scss$/,
+                use: ['style-loader', 'css-loader', 'sass-loader'],
+            },
+            {
+                test: /\.(png|svg|jpg|gif)$/i,
+                use: ['file-loader'],
+            },
+            {
+                enforce: 'pre',
+                test: /\.js$/,
+                loader: 'source-map-loader',
             },
         ],
     },
