@@ -20,6 +20,7 @@
         "max-line-length": [100, { "ignore": ["comments"] }],
         "no-missing-end-of-source-newline": null,
         "selector-class-pattern": null,
-        "property-no-vendor-prefix": null
+        "property-no-vendor-prefix": null,
+        "max-nesting-depth": 5,
     }
 }
