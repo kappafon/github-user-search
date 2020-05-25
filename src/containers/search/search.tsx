@@ -1,5 +1,5 @@
 import React from 'react'
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 import { useLazyQuery } from '@apollo/react-hooks'
 import Users from './components/users'
 
