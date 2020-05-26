@@ -6,8 +6,9 @@ import { ApolloProvider, useQuery } from '@apollo/react-hooks'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory'
 import gql from 'graphql-tag'
-import Login from './containers/login'
-import App from './containers/app'
+import Login from './pages/login/login'
+import App from './pages/app'
+import { BrowserRouter } from 'react-router-dom'
 
 const typeDefs = gql`
     extend type Query {
@@ -47,7 +48,9 @@ function IsLoggedIn() {
 
 ReactDom.render(
     <ApolloProvider client={client}>
-        <IsLoggedIn />
+        <BrowserRouter>
+            <IsLoggedIn />
+        </BrowserRouter>
     </ApolloProvider>,
     document.getElementById('root') as HTMLElement
 )
