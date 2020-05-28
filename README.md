@@ -1,6 +1,6 @@
 # github-user-search
 
-> React app to lookup Github profiles.
+> React / typescript app to lookup Github profiles via new GH v4 API using graphql.
 
 ## Usage
 
