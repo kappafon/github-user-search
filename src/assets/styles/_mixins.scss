@@ -1,0 +1,47 @@
+@import 'variables';
+
+@mixin laptop {
+    @media only screen and (min-width: 1366px) {
+        @content;
+    }
+}
+
+@mixin desktop-1080p {
+    @media only screen and (min-width: 1920px) {
+        @content;
+    }
+}
+
+@mixin desktop-4k {
+    @media only screen and (min-width: 2560px) {
+        @content;
+    }
+}
+
+@mixin ellipsis-text($padding-right: 10px) {
+    padding-right: $padding-right;
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+@mixin reverse-icon-animation {
+    transform: rotateZ(-180deg);
+
+    transition: 0.2s;
+    transition-timing-function: ease-in;
+}
+@mixin straight-icon-animation {
+    transform: rotateZ(0);
+
+    transition: 0.2s;
+    transition-timing-function: ease-in;
+}
+
+@mixin circle($diameter) {
+    width: $diameter;
+    height: $diameter;
+
+    border-radius: 50%;
+}

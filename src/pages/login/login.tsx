@@ -1,48 +1,45 @@
 import React from 'react'
-import { useApolloClient } from '@apollo/react-hooks'
 import ApolloClient from 'apollo-client'
+import { useApolloClient } from '@apollo/react-hooks'
+import { FaGithubAlt } from 'react-icons/fa'
+import './login.scss'
 
 const Login: React.FunctionComponent = () => {
     const client: ApolloClient<any> = useApolloClient()
-    const [status, setStatus] = React.useState<string>(STATUS.INITIAL)
 
     React.useEffect(() => {
         if (localStorage.getItem('github_token')) {
-            setStatus(STATUS.AUTHENTICATED)
             return
         }
         const code =
             window.location.href.match(/\?code=(.*)/) &&
             window.location.href.match(/\?code=(.*)/)[1]
         if (code) {
-            setStatus(STATUS.LOADING)
             fetch(`${AUTH_API_URI}${code}`)
                 .then((response) => response.json())
                 .then(({ token }) => {
                     if (token) {
                         localStorage.setItem('github_token', token)
                         client.writeData({ data: { isLoggedIn: true } })
-                        setStatus(STATUS.FINISHED_LOADING)
                     }
                 })
         }
     }, [])
 
     return (
-        <>
-            <div>{status}</div>
-            <a href={LOGIN_URI}>Login</a>
-        </>
+        <div className="login__container">
+            <div className="login__box">
+                <FaGithubAlt size="4em" className="login__logo-image" />
+                <h2 className="login__box__title">GitHub User Finder</h2>
+                <div>To start looking up users, please login.</div>
+                <a className="login__button" href={LOGIN_URI}>
+                    Login
+                </a>
+            </div>
+        </div>
     )
 }
 export default Login
-
-const STATUS = {
-    INITIAL: 'initial',
-    LOADING: 'loading',
-    FINISHED_LOADING: 'finished_loading',
-    AUTHENTICATED: 'authenticated',
-}
 
 const CLIENT_ID = '8dde7ff4708b3b012c93'
 const REDIRECT_URI = 'http://localhost:3000/'

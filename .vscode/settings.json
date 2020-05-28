@@ -11,5 +11,8 @@
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true,
         "source.fixAll.stylelint": true
+    },
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#28a745"
     }
 }

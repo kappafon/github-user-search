@@ -1,0 +1,49 @@
+.repo-list {
+    &__title {
+        // width: 100%;
+        max-width: 1000px;
+        margin: 0 auto 20px;
+        padding: 0 60px;
+
+        cursor: pointer;
+    }
+    &__container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__container.desc {
+        flex-direction: column-reverse;
+    }
+}
+
+.repo {
+    &__card {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 1000px;
+        margin: auto;
+        padding: 10px 60px 20px;
+
+        border-top: 1px solid gainsboro;
+
+        &__title {
+            margin: 10px 0 5px;
+
+            color: #269f42;
+            font-size: 20px;
+        }
+        &__description {
+            margin: 10px 0;
+
+            font-size: 18px;
+        }
+        &__link {
+            margin: 10px 0;
+        }
+        &:nth-child(odd) {
+            background-color: #fefefe;
+        }
+    }
+}

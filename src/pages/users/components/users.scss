@@ -1,0 +1,11 @@
+.user {
+    &__box {
+        width: 128px;
+    }
+    &__image {
+        width: 128px;
+    }
+    &__username {
+        word-break: break-all;
+    }
+}

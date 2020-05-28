@@ -3,6 +3,9 @@ import { useLazyQuery } from '@apollo/react-hooks'
 import { useParams } from 'react-router-dom'
 import gql from 'graphql-tag'
 import RepoList from './components/repoList'
+import './profilePage.scss'
+import ExternalLink from '../../components/externalLink/externalLink'
+import Loading from '../../components/loading/loading'
 
 const ProfilePage: React.FunctionComponent = () => {
     const [ascOrder, setAscOrder] = React.useState<boolean>(true)
@@ -17,34 +20,42 @@ const ProfilePage: React.FunctionComponent = () => {
         getUsers({ variables: { user: value, direction: ascOrder ? 'ASC' : 'DESC' } })
     }, [value])
 
-    if (networkStatus === 4) return <p>Refetching...</p>
-    if (loading) return <p>Loading...</p>
+    if (networkStatus === 4) return <Loading loadingMessage="Refetching" />
+    if (loading) return <Loading />
     if (error) return <p>Error</p>
 
     const profile = data && data.user ? data.user : null
     const repos = profile ? profile.repositories.edges : []
 
-    const onSortClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const onSortClick = () => {
         event.preventDefault()
         refetch({ direction: ascOrder ? 'DESC' : 'ASC' })
         setAscOrder(!ascOrder)
     }
     return (
-        <div>
+        <div className="profile__container">
             {!profile ? (
                 <div>profile page</div>
             ) : (
-                <span>
-                    <img src={profile.avatarUrl} width={256} />
-                    <div>{profile.login}</div>
-                    <div>{profile.email}</div>
+                <section className="profile__card">
                     <a href={profile.url} target="_blank" rel="noreferrer">
-                        {profile.url}
+                        <img src={profile.avatarUrl} width={256} />
                     </a>
-                </span>
+                    <div className="profile__info">
+                        <a
+                            href={profile.url}
+                            className="profile__info__login"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <h2>{profile.login}</h2>
+                        </a>
+                        <div className="profile__info__email">{profile.email}</div>
+                        <ExternalLink url={profile.url} />
+                    </div>
+                </section>
             )}
-            <button onClick={onSortClick}>Sort By Name</button>
-            <div>{repos.length === 0 ? <div>no repos</div> : <RepoList repos={repos} />}</div>
+            <RepoList repos={repos} onSortClick={onSortClick} ascOrder={ascOrder} />
         </div>
     )
 }

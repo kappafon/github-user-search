@@ -3,12 +3,15 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import { ApolloClient } from 'apollo-client'
 import { ApolloProvider, useQuery } from '@apollo/react-hooks'
-import { HttpLink } from 'apollo-link-http'
+import { createHttpLink } from 'apollo-link-http'
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory'
 import gql from 'graphql-tag'
 import Login from './pages/login/login'
 import App from './pages/app'
 import { BrowserRouter } from 'react-router-dom'
+import { setContext } from 'apollo-link-context'
+import './index.scss'
+import Loading from './components/loading/loading'
 
 const typeDefs = gql`
     extend type Query {
@@ -21,17 +24,24 @@ const IS_LOGGED_IN = gql`
     }
 `
 
+const httpLink = createHttpLink({
+    uri: 'https://api.github.com/graphql',
+})
+
+const authLink = setContext((_, { headers }) => {
+    const token = localStorage.getItem('github_token')
+    return {
+        headers: {
+            ...headers,
+            authorization: token ? `Bearer ${token}` : '',
+        },
+    }
+})
+
 const cache = new InMemoryCache()
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
     cache,
-    link: new HttpLink({
-        uri: 'https://api.github.com/graphql',
-        headers: {
-            authorization: localStorage.getItem('github_token')
-                ? `Bearer ${localStorage.getItem('github_token')}`
-                : null,
-        },
-    }),
+    link: authLink.concat(httpLink),
     typeDefs,
 })
 
@@ -42,7 +52,10 @@ cache.writeData({
 })
 
 function IsLoggedIn() {
-    const { data } = useQuery(IS_LOGGED_IN)
+    const { data, error, loading } = useQuery(IS_LOGGED_IN)
+    if (loading) return <Loading />
+    if (error) return <p>Error</p>
+
     return data.isLoggedIn ? <App /> : <Login />
 }
 

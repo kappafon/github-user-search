@@ -1,0 +1,13 @@
+.external-link {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+
+    font-size: 13px;
+
+    &__icon {
+        margin-left: 5px;
+
+        font-size: 8px;
+    }
+}

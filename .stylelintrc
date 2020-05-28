@@ -15,6 +15,7 @@
             "empty-line-between-groups": true
         }],
         "order/properties-alphabetical-order": null,
+        "declaration-block-no-duplicate-properties": true,
         "at-rule-no-unknown": null,
         "declaration-empty-line-before": null,
         "max-line-length": [100, { "ignore": ["comments"] }],

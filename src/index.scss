@@ -1,0 +1,53 @@
+@import 'src/assets/styles/theme/default';
+@import 'src/assets/styles/mixins';
+@import 'src/assets/styles/normalizer';
+@import 'src/assets/styles/variables';
+
+:root {
+    --primary-font: 'Raleway', sans-serif;
+}
+
+html {
+    box-sizing: border-box;
+
+    font-size: 16px;
+
+    user-select: none;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+
+    font-family: var(--primary-font);
+
+    background-color: #f9fafb;
+
+    #root {
+        height: 100%;
+        overflow: hidden;
+
+        background-color: #f9f9f9;
+    }
+
+    .reverse-icon {
+        @include reverse-icon-animation;
+    }
+
+    .straight-icon {
+        @include straight-icon-animation;
+    }
+
+    [hidden] {
+        display: none !important;
+    }
+}

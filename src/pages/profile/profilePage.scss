@@ -1,0 +1,41 @@
+.profile {
+    &__container {
+        display: block;
+        margin-right: -16px;
+        overflow-y: scroll;
+    }
+
+    &__card {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        max-width: 1000px;
+        margin: 30px auto 40px;
+        padding: 0 60px;
+        img {
+            border-radius: 8px;
+
+            transition: all 0.2s;
+            transition-timing-function: ease-in;
+
+            &:hover {
+                border-radius: 12px;
+                transform: scale(1.02);
+                cursor: pointer;
+
+                transition: all 0.2s;
+                transition-timing-function: ease-in;
+            }
+        }
+    }
+    &__info {
+        margin: 24px 20px 32px 24px;
+        &__email {
+            margin: 0 0 10px;
+        }
+        &__login {
+            color: #269f42;
+            text-decoration: none;
+        }
+    }
+}

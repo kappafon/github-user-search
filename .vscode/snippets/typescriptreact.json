@@ -1,0 +1,21 @@
+{
+    "TS React Func Comp": {
+        "prefix": "_rfunc-comp",
+        "body": [
+            "import React from 'react';\n",
+            "import './${1:${TM_FILENAME_BASE/(.*)$/${1}/}}.scss';\n",
+            "//#region Interfaces",
+            "export interface ${2:${TM_FILENAME_BASE/(.{1})(.*)$/${1:/upcase}$2/}}Props {\n",
+            "}",
+            "",
+            "//#endregion Interfaces",
+            "",
+            "const ${TM_FILENAME_BASE}: React.FunctionComponent<${2}Props> = (props) => {",
+            "\treturn null;",
+            "};",
+            "export default ${TM_FILENAME_BASE};",
+            ""
+        ],
+        "description": "React Component snippet"
+    }
+}
