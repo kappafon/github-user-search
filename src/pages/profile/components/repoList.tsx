@@ -39,7 +39,7 @@ const RepoList: React.FunctionComponent<RepoListProps> = (props) => {
             )}
             <div className="repo-list__container">
                 {props.repos.map((repo, index) => {
-                    const { name, description, url } = repo.node
+                    const { name, description, url } = repo
                     return (
                         <section className="repo__card" key={index}>
                             <h3 className="repo__card__title">{name}</h3>

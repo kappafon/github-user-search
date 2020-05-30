@@ -38,7 +38,6 @@ const ProfilePage: React.FunctionComponent = () => {
         getProfile({
             variables: {
                 user: value,
-                threshold: profileCacheParsed.visibleRepoCount,
                 orderBy: ascOrder ? 'ASC' : 'DESC',
                 after: null,
             },
@@ -59,14 +58,14 @@ const ProfilePage: React.FunctionComponent = () => {
     if (error) return <ErrorMessage message={error.message} />
 
     const profile = data && data.user ? data.user : null
-    const repos = profile ? profile.repositories.edges : []
+    const repos = profile ? profile.repositories.nodes : []
     const pageInfo = profile ? profile.repositories.pageInfo : null
 
     const loadMore = () => {
         fetchMore({
             variables: {
-                user: value,
-                orderBy: ascOrder ? 'ASC' : 'DESC',
+                // user: value,
+                // orderBy: ascOrder ? 'ASC' : 'DESC',
                 after: data.user.repositories.pageInfo.endCursor,
             },
             updateQuery: (prev, { fetchMoreResult }) => {
@@ -77,9 +76,9 @@ const ProfilePage: React.FunctionComponent = () => {
                         ...fetchMoreResult.user,
                         repositories: {
                             ...fetchMoreResult.user.repositories,
-                            edges: [
-                                ...prev.user.repositories.edges,
-                                ...fetchMoreResult.user.repositories.edges,
+                            nodes: [
+                                ...prev.user.repositories.nodes,
+                                ...fetchMoreResult.user.repositories.nodes,
                             ],
                         },
                     },
@@ -87,11 +86,23 @@ const ProfilePage: React.FunctionComponent = () => {
                 sessionStorage.setItem(
                     sessionStorageKey,
                     JSON.stringify({
-                        visibleRepoCount: result.user.repositories.edges.length,
+                        visibleRepoCount: result.user.repositories.nodes.length,
                         orderBy: ascOrder ? 'ASC' : 'DESC',
                     })
                 )
-                return result
+                return {
+                    ...fetchMoreResult,
+                    user: {
+                        ...fetchMoreResult.user,
+                        repositories: {
+                            ...fetchMoreResult.user.repositories,
+                            nodes: [
+                                ...prev.user.repositories.nodes,
+                                ...fetchMoreResult.user.repositories.nodes,
+                            ],
+                        },
+                    },
+                }
             },
         })
     }
@@ -100,10 +111,6 @@ const ProfilePage: React.FunctionComponent = () => {
         event.preventDefault()
         refetch({
             // user: value,
-            threshold:
-                profileCacheParsed.visibleRepoCount > 100
-                    ? 100
-                    : profileCacheParsed.visibleRepoCount,
             orderBy: ascOrder ? 'DESC' : 'ASC',
         })
         setAscOrder(!ascOrder)
@@ -144,25 +151,26 @@ const ProfilePage: React.FunctionComponent = () => {
 export default ProfilePage
 
 const GET_PROFILE = gql`
-    query user($user: String!, $threshold: Int!, $orderBy: String!, $after: String) {
+    query user($user: String!, $orderBy: String!, $after: String) {
         user(login: $user) {
             avatarUrl
             email
             login
             url
-            repositories(
-                first: $threshold
-                orderBy: { field: NAME, direction: $orderBy }
-                after: $after
-            ) {
+            repositories(first: 100, orderBy: { field: NAME, direction: $orderBy }, after: $after) {
                 totalCount
-                edges {
-                    node {
-                        name
-                        description
-                        url
-                    }
+                nodes {
+                    name
+                    description
+                    url
                 }
+                # edges {
+                #     node {
+                #         name
+                #         description
+                #         url
+                #     }
+                # }
                 pageInfo {
                     hasNextPage
                     endCursor
