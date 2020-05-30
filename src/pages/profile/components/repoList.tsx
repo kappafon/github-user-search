@@ -6,8 +6,10 @@ import { FaLongArrowAltUp } from 'react-icons/fa'
 
 export interface RepoListProps {
     repos?: Array<any>
+    pageInfo?: any
     ascOrder?: boolean
     onSortClick?(): void
+    loadMore?(): void
 }
 
 const RepoList: React.FunctionComponent<RepoListProps> = (props) => {
@@ -26,6 +28,9 @@ const RepoList: React.FunctionComponent<RepoListProps> = (props) => {
             <h2 className="repo-list__title" onClick={onSortClick}>
                 Repositories <FaLongArrowAltUp size="14px" className={arrowIconClassName} />
             </h2>
+            {props.pageInfo && props.pageInfo.hasNextPage && (
+                <div onClick={props.loadMore}>load more</div>
+            )}
             <div className="repo-list__container">
                 {props.repos.map((repo, index) => {
                     const { name, description, url } = repo.node

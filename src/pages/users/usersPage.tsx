@@ -68,7 +68,6 @@ const GET_USERS = gql`
                         avatarUrl
                     }
                 }
-                cursor
             }
             pageInfo {
                 hasNextPage

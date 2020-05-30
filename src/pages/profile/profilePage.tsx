@@ -12,12 +12,15 @@ const ProfilePage: React.FunctionComponent = () => {
     const params = useParams()
     const value = params.value
 
-    const [getUsers, { loading, data, error, refetch, networkStatus }] = useLazyQuery(GET_PROFILE, {
-        notifyOnNetworkStatusChange: true,
-        partialRefetch: true,
-    })
+    const [getProfile, { loading, data, error, fetchMore, refetch, networkStatus }] = useLazyQuery(
+        GET_PROFILE,
+        {
+            notifyOnNetworkStatusChange: true,
+            partialRefetch: true,
+        }
+    )
     React.useEffect(() => {
-        getUsers({ variables: { user: value, direction: ascOrder ? 'ASC' : 'DESC' } })
+        getProfile({ variables: { user: value, direction: ascOrder ? 'ASC' : 'DESC' } })
     }, [value])
 
     if (networkStatus === 4) return <Loading loadingMessage="Refetching" />
@@ -26,6 +29,34 @@ const ProfilePage: React.FunctionComponent = () => {
 
     const profile = data && data.user ? data.user : null
     const repos = profile ? profile.repositories.edges : []
+    const pageInfo = profile ? profile.repositories.pageInfo : null
+
+    const loadMore = () => {
+        console.log('loadingMore')
+        fetchMore({
+            variables: {
+                after: data.user.repositories.pageInfo.endCursor,
+            },
+            updateQuery: (prev, { fetchMoreResult }) => {
+                console.log('loadMore -> prev', prev)
+                if (!fetchMoreResult) return prev
+                console.log('loadMore -> fetchMoreResult', fetchMoreResult)
+                return {
+                    ...fetchMoreResult,
+                    user: {
+                        ...fetchMoreResult.user,
+                        repositories: {
+                            ...fetchMoreResult.user.repositories,
+                            edges: [
+                                ...prev.user.repositories.edges,
+                                ...fetchMoreResult.user.repositories.edges,
+                            ],
+                        },
+                    },
+                }
+            },
+        })
+    }
 
     const onSortClick = () => {
         event.preventDefault()
@@ -55,26 +86,37 @@ const ProfilePage: React.FunctionComponent = () => {
                     </div>
                 </section>
             )}
-            <RepoList repos={repos} onSortClick={onSortClick} ascOrder={ascOrder} />
+            <RepoList
+                repos={repos}
+                onSortClick={onSortClick}
+                loadMore={loadMore}
+                ascOrder={ascOrder}
+                pageInfo={pageInfo}
+            />
         </div>
     )
 }
 export default ProfilePage
 
 const GET_PROFILE = gql`
-    query user($user: String!, $direction: String!) {
+    query user($user: String!, $direction: String!, $after: String) {
         user(login: $user) {
             avatarUrl
             email
             login
             url
-            repositories(first: 100, orderBy: { field: NAME, direction: $direction }) {
+            repositories(first: 2, orderBy: { field: NAME, direction: $direction }, after: $after) {
+                totalCount
                 edges {
                     node {
                         name
                         description
                         url
                     }
+                }
+                pageInfo {
+                    hasNextPage
+                    endCursor
                 }
             }
         }
