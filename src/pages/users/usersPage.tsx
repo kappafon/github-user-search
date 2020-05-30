@@ -2,39 +2,54 @@ import React from 'react'
 import { useLazyQuery } from '@apollo/react-hooks'
 import { useParams } from 'react-router-dom'
 import gql from 'graphql-tag'
-import Users from './components/users'
+import UsersList from './components/usersList'
 import './usersPage.scss'
 import Loading from '../../components/loading/loading'
+import ErrorMessage from '../../components/error/error'
+import { NetworkStatus } from 'apollo-client'
 
 const UsersPage: React.FunctionComponent = () => {
-    const [getUsers, { loading, data, error, fetchMore }] = useLazyQuery(GET_USERS)
     const params = useParams()
-    const value = params.value
+    const userQuery = params.value
+    const [getUsers, { data, error, loading, networkStatus, fetchMore }] = useLazyQuery(GET_USERS, {
+        notifyOnNetworkStatusChange: true,
+    })
 
     React.useEffect(() => {
-        getUsers({ variables: { user: value } })
-    }, [value])
+        getUsers({ variables: { user: userQuery, after: null } })
+    }, [userQuery])
 
-    if (loading) return <Loading />
-    if (error) return <p>{error.message}</p>
+    if (!data) return <Loading />
+    if (loading && networkStatus !== NetworkStatus.fetchMore) {
+        return <Loading loadingMessage={NetworkStatus[networkStatus]} />
+    }
+    if (error) return <ErrorMessage message={error.message} />
 
-    const users = data && data.search && data.search.edges ? data.search.edges : []
+    console.log('data', data)
+    const users = data.search.nodes
+    if (!users.length)
+        return (
+            <ErrorMessage
+                message={
+                    <p>
+                        User not found. <br /> Try a different username.
+                    </p>
+                }
+            />
+        )
 
-    const loadMore = () => {
-        console.log('loadingMore')
+    const loadMoreUsers = () => {
         fetchMore({
             variables: {
                 after: data.search.pageInfo.endCursor,
             },
             updateQuery: (prev, { fetchMoreResult }) => {
-                console.log('loadMore -> prev', prev)
                 if (!fetchMoreResult) return prev
-                console.log('loadMore -> fetchMoreResult', fetchMoreResult)
                 return {
                     ...fetchMoreResult,
                     search: {
                         ...fetchMoreResult.search,
-                        edges: [...prev.search.edges, ...fetchMoreResult.search.edges],
+                        nodes: [...prev.search.nodes, ...fetchMoreResult.search.nodes],
                     },
                 }
             },
@@ -43,14 +58,16 @@ const UsersPage: React.FunctionComponent = () => {
 
     return (
         <div className="users__container">
-            {users.length === 0 ? (
-                <div>no result</div>
-            ) : (
-                <>
-                    {data.search.pageInfo.hasNextPage && <div onClick={loadMore}>load more</div>}
-                    <Users users={users} />
-                </>
+            {data.search.pageInfo.hasNextPage && (
+                <button
+                    disabled={networkStatus === NetworkStatus.fetchMore}
+                    onClick={loadMoreUsers}
+                >
+                    Load More
+                </button>
             )}
+            <p>{data.search.userCount} user(s) found</p>
+            <UsersList users={users} />
         </div>
     )
 }
@@ -60,13 +77,10 @@ const GET_USERS = gql`
     query user($user: String!, $after: String) {
         search(query: $user, type: USER, first: 3, after: $after) {
             userCount
-            edges {
-                node {
-                    ... on User {
-                        login
-                        id
-                        avatarUrl
-                    }
+            nodes {
+                ... on User {
+                    login
+                    avatarUrl
                 }
             }
             pageInfo {

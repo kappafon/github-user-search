@@ -1,11 +1,12 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { FaSearch } from 'react-icons/fa'
 import classNames from 'classnames'
 import './search.scss'
 
 const Search: React.FunctionComponent = () => {
     const history = useHistory()
+    const location = useLocation()
     const [value, setValue] = React.useState<string>('')
 
     const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -14,6 +15,9 @@ const Search: React.FunctionComponent = () => {
 
     const onSubmitClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault()
+        const currentPath = location.pathname
+        const newPath = `/users/${value}`
+        if (currentPath === newPath) return
         history.push(`/users/${value}`)
     }
     const searchButtonClassName = classNames('search__button', { disabled: value.length === 0 })

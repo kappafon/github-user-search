@@ -1,5 +1,5 @@
 import React from 'react'
-import './errorMessage.scss'
+// import './errorMessage.scss'
 
 export interface ErrorMessageProps {
     message?: React.ReactNode

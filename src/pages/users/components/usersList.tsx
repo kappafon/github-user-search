@@ -1,19 +1,19 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import './users.scss'
+import './usersList.scss'
 
-export interface UsersProps {
+export interface UsersListProps {
     users?: Array<any>
 }
 
-const Users: React.FunctionComponent<UsersProps> = (props) => {
+const UsersList: React.FunctionComponent<UsersListProps> = (props) => {
     return (
         <>
             {props.users.map((user) => {
-                const { login, id, avatarUrl } = user.node
+                const { login, avatarUrl } = user
                 const alt = `${login}'s profile picture.`
                 return (
-                    <Link key={id} to={'/profile/' + login} className="user__box">
+                    <Link key={login} to={'/profile/' + login} className="user__box">
                         <img className="user__image" src={avatarUrl} alt={alt} width={128} />
                         <div className="user__username">{login}</div>
                     </Link>
@@ -22,4 +22,4 @@ const Users: React.FunctionComponent<UsersProps> = (props) => {
         </>
     )
 }
-export default Users
+export default UsersList
