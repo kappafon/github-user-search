@@ -9,23 +9,42 @@ import Loading from '../../components/loading/loading'
 import { NetworkStatus } from 'apollo-client'
 import ErrorMessage from '../../components/error/error'
 
+const threshold = 50
 const ProfilePage: React.FunctionComponent = () => {
-    const [ascOrder, setAscOrder] = React.useState<boolean>(true)
     const params = useParams()
     const value = params.value
+    const sessionStorageKey = `${value}-repo-cache`
+    const profileCache = sessionStorage.getItem(sessionStorageKey)
+
+    const profileCacheParsed = profileCache
+        ? JSON.parse(profileCache)
+        : {
+              visibleRepoCount: threshold,
+              orderBy: true,
+          }
+    const [ascOrder, setAscOrder] = React.useState<boolean>(profileCacheParsed.orderBy)
+
+    // const repoCount = sessionStorage.getItem(sessionStorageKey)
+    // const thresholdCount = repoCount ? JSON.parse(repoCount) : threshold
 
     const [getProfile, { data, loading, error, networkStatus, fetchMore, refetch }] = useLazyQuery(
         GET_PROFILE,
         {
             notifyOnNetworkStatusChange: true,
-            // partialRefetch: true,
+            partialRefetch: true,
         }
     )
     React.useEffect(() => {
         getProfile({
-            variables: { user: value, direction: ascOrder ? 'ASC' : 'DESC', after: null },
+            variables: {
+                user: value,
+                threshold: profileCacheParsed.visibleRepoCount,
+                orderBy: ascOrder ? 'ASC' : 'DESC',
+                after: null,
+            },
         })
     }, [value])
+    console.log('ProfilePage:React.FunctionComponent -> data', data)
 
     // if (networkStatus === 4) return <Loading loadingMessage="Refetching" />
     // if (!data) return <Loading />
@@ -44,16 +63,15 @@ const ProfilePage: React.FunctionComponent = () => {
     const pageInfo = profile ? profile.repositories.pageInfo : null
 
     const loadMore = () => {
-        console.log('loadingMore')
         fetchMore({
             variables: {
+                user: value,
+                orderBy: ascOrder ? 'ASC' : 'DESC',
                 after: data.user.repositories.pageInfo.endCursor,
             },
             updateQuery: (prev, { fetchMoreResult }) => {
-                console.log('loadMore -> prev', prev)
                 if (!fetchMoreResult) return prev
-                console.log('loadMore -> fetchMoreResult', fetchMoreResult)
-                return {
+                const result = {
                     ...fetchMoreResult,
                     user: {
                         ...fetchMoreResult.user,
@@ -66,13 +84,28 @@ const ProfilePage: React.FunctionComponent = () => {
                         },
                     },
                 }
+                sessionStorage.setItem(
+                    sessionStorageKey,
+                    JSON.stringify({
+                        visibleRepoCount: result.user.repositories.edges.length,
+                        orderBy: ascOrder ? 'ASC' : 'DESC',
+                    })
+                )
+                return result
             },
         })
     }
 
     const onSortClick = () => {
         event.preventDefault()
-        refetch({ user: value, direction: ascOrder ? 'DESC' : 'ASC' })
+        refetch({
+            // user: value,
+            threshold:
+                profileCacheParsed.visibleRepoCount > 100
+                    ? 100
+                    : profileCacheParsed.visibleRepoCount,
+            orderBy: ascOrder ? 'DESC' : 'ASC',
+        })
         setAscOrder(!ascOrder)
     }
     return (
@@ -111,13 +144,17 @@ const ProfilePage: React.FunctionComponent = () => {
 export default ProfilePage
 
 const GET_PROFILE = gql`
-    query user($user: String!, $direction: String!, $after: String) {
+    query user($user: String!, $threshold: Int!, $orderBy: String!, $after: String) {
         user(login: $user) {
             avatarUrl
             email
             login
             url
-            repositories(first: 2, orderBy: { field: NAME, direction: $direction }, after: $after) {
+            repositories(
+                first: $threshold
+                orderBy: { field: NAME, direction: $orderBy }
+                after: $after
+            ) {
                 totalCount
                 edges {
                     node {

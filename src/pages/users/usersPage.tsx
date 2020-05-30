@@ -75,7 +75,7 @@ export default UsersPage
 
 const GET_USERS = gql`
     query user($user: String!, $after: String) {
-        search(query: $user, type: USER, first: 3, after: $after) {
+        search(query: $user, type: USER, first: 100, after: $after) {
             userCount
             nodes {
                 ... on User {
