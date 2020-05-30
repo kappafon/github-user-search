@@ -25,9 +25,8 @@ const UsersPage: React.FunctionComponent = () => {
     }
     if (error) return <ErrorMessage message={error.message} />
 
-    console.log('data', data)
     const users = data.search.nodes
-    if (!users.length)
+    if (!users.length) {
         return (
             <ErrorMessage
                 message={
@@ -37,6 +36,7 @@ const UsersPage: React.FunctionComponent = () => {
                 }
             />
         )
+    }
 
     const loadMoreUsers = () => {
         fetchMore({

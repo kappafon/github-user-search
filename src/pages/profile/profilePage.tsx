@@ -6,26 +6,38 @@ import RepoList from './components/repoList'
 import './profilePage.scss'
 import ExternalLink from '../../components/externalLink/externalLink'
 import Loading from '../../components/loading/loading'
+import { NetworkStatus } from 'apollo-client'
+import ErrorMessage from '../../components/error/error'
 
 const ProfilePage: React.FunctionComponent = () => {
     const [ascOrder, setAscOrder] = React.useState<boolean>(true)
     const params = useParams()
     const value = params.value
 
-    const [getProfile, { loading, data, error, fetchMore, refetch, networkStatus }] = useLazyQuery(
+    const [getProfile, { data, loading, error, networkStatus, fetchMore, refetch }] = useLazyQuery(
         GET_PROFILE,
         {
             notifyOnNetworkStatusChange: true,
-            partialRefetch: true,
+            // partialRefetch: true,
         }
     )
     React.useEffect(() => {
-        getProfile({ variables: { user: value, direction: ascOrder ? 'ASC' : 'DESC' } })
+        getProfile({
+            variables: { user: value, direction: ascOrder ? 'ASC' : 'DESC', after: null },
+        })
     }, [value])
 
-    if (networkStatus === 4) return <Loading loadingMessage="Refetching" />
-    if (loading) return <Loading />
-    if (error) return <p>Error</p>
+    // if (networkStatus === 4) return <Loading loadingMessage="Refetching" />
+    // if (!data) return <Loading />
+    if (
+        loading &&
+        networkStatus !== NetworkStatus.fetchMore &&
+        networkStatus !== NetworkStatus.refetch &&
+        networkStatus !== NetworkStatus.setVariables
+    ) {
+        return <Loading loadingMessage={NetworkStatus[networkStatus]} />
+    }
+    if (error) return <ErrorMessage message={error.message} />
 
     const profile = data && data.user ? data.user : null
     const repos = profile ? profile.repositories.edges : []
@@ -60,7 +72,7 @@ const ProfilePage: React.FunctionComponent = () => {
 
     const onSortClick = () => {
         event.preventDefault()
-        refetch({ direction: ascOrder ? 'DESC' : 'ASC' })
+        refetch({ user: value, direction: ascOrder ? 'DESC' : 'ASC' })
         setAscOrder(!ascOrder)
     }
     return (
