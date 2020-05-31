@@ -1,8 +1,13 @@
 .users {
     &__container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+        width: 100%;
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 0;
         overflow-y: auto;
+
+        text-align: center;
     }
 }

@@ -6,16 +6,16 @@ export interface LoadingProps {
 }
 
 const Loading: React.FunctionComponent<LoadingProps> = (props) => {
-    const { loadingMessage = 'Loading' } = props
+    const { loadingMessage } = props
     return (
-        <div className="loading-component" data-testid="loading-animation">
+        <div className="loading-component">
             <div className="ellipsis">
                 <div />
                 <div />
                 <div />
                 <div />
             </div>
-            <span>{loadingMessage}</span>
+            {loadingMessage && <span>{loadingMessage}</span>}
         </div>
     )
 }

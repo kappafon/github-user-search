@@ -1,9 +1,10 @@
 .user {
     &__box {
-        width: 128px;
+        width: inherit;
+        max-width: 256px;
     }
     &__image {
-        width: 128px;
+        width: inherit;
     }
     &__username {
         word-break: break-all;

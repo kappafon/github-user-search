@@ -32,11 +32,22 @@ const RepoList: React.FunctionComponent<RepoListProps> = (props) => {
                 {props.repos.map((repo, index) => {
                     const { name, description, url } = repo
                     return (
-                        <section className="repo__card" key={index}>
-                            <h3 className="repo__card__title">{name}</h3>
-                            <div className="repo__card__description">{description}</div>
-                            <ExternalLink url={url} className="repo__card__link" />
-                        </section>
+                        <div className="repo__card-wrapper" key={index}>
+                            <section className="repo__card">
+                                <a
+                                    href={url}
+                                    className="profile__info__login"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    <h3 className="repo__card__title">{name}</h3>
+                                </a>
+                                {description && (
+                                    <div className="repo__card__description">{description}</div>
+                                )}
+                                <ExternalLink url={url} className="repo__card__link" />
+                            </section>
+                        </div>
                     )
                 })}
             </div>

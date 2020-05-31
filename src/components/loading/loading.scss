@@ -66,8 +66,7 @@
 }
 
 .loading-component {
-    @include dots(0, 19px, 11px, var(--primary-color));
-    z-index: 9999;
+    @include dots(0, 12px, 6px, var(--primary-color));
 
     display: flex;
     flex-direction: column;
@@ -82,6 +81,6 @@
         padding-top: px-to-vh(17px);
 
         font-weight: 600;
-        font-size: font-size(14px);
+        font-size: px-to-rem(14px);
     }
 }

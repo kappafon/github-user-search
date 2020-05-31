@@ -1,6 +1,6 @@
 @import '../../assets/styles/mixins';
 
-.greeting-message {
+.error-message {
     @include layout-limit;
     margin: 15px auto 0;
 }

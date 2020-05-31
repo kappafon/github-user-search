@@ -7,7 +7,7 @@ import './profilePage.scss'
 import ExternalLink from '../../components/externalLink/externalLink'
 import Loading from '../../components/loading/loading'
 import { NetworkStatus } from 'apollo-client'
-import ErrorMessage from '../../components/error/error'
+import ErrorMessage from '../../components/errorMessage/errorMessage'
 
 const ProfilePage: React.FunctionComponent = () => {
     const params = useParams()
@@ -113,7 +113,12 @@ const ProfilePage: React.FunctionComponent = () => {
     return (
         <div className="profile__container" onScroll={shouldFetchMore ? onScroll : undefined}>
             <section className="profile__card">
-                <a href={profile.url} target="_blank" rel="noreferrer">
+                <a
+                    href={profile.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="profile__card__image-link"
+                >
                     <img src={profile.avatarUrl} width={256} />
                 </a>
                 <div className="profile__info">

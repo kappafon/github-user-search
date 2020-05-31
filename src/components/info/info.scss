@@ -1,0 +1,18 @@
+@import '../../assets/styles/mixins';
+
+.info-message {
+    &__container {
+        width: 100%;
+        margin: -12px auto 10px;
+        padding: 8px 0;
+
+        color: #032f62;
+
+        background-color: #dbedff;
+        border: 1px solid rgba(27, 31, 35, 0.15);
+        box-shadow: 0 2px 4px #dbedff;
+    }
+    &__message {
+        @include layout-limit;
+    }
+}

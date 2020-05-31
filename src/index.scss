@@ -19,6 +19,8 @@ html {
 *::before,
 *::after {
     box-sizing: inherit;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -30,13 +32,11 @@ body {
 
     font-family: var(--primary-font);
 
-    background-color: #f9fafb;
-
     #root {
         height: 100%;
         overflow: hidden;
 
-        background-color: #f9f9f9;
+        background-color: #f6f8fa;
     }
 
     .reverse-icon {

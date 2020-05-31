@@ -6,7 +6,7 @@
         width: 100%;
         padding: 10px;
 
-        font-size: 14px;
+        font-size: px-to-rem(14px);
 
         border: 1px solid #e9e9e9;
         border-right: 0;
@@ -30,7 +30,7 @@
         padding: 4px 16px;
 
         color: #fff;
-        font-size: 16px;
+        font-size: px-to-rem(16px);
 
         background-color: #28a745;
         background-image: linear-gradient(-180deg, #34d058, #28a745 90%);
