@@ -20,5 +20,6 @@ TODO:
 -   Add more useful info about specific user profile and repos, possibly implement 'settings' to preselect what info to fetch on search
 -   Dark mode ofc
 -   host the app on gh pages, env sepparation
+-   write some tests
 
 ![Alt text](/src/assets/images/demo.gif?raw=true 'Optional Title')
