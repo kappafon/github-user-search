@@ -21,9 +21,9 @@
 
 @mixin layout-limit {
     width: 100%;
-    max-width: 1000px;
+    max-width: px-to-vw(1000px);
     margin: 0 auto;
-    padding: 0 60px;
+    padding: 0 px-to-vw(60px);
 }
 
 @mixin reverse-icon-animation {

@@ -9,5 +9,8 @@
         overflow-y: auto;
 
         text-align: center;
+        .user__box:last-of-type {
+            margin-bottom: 30px;
+        }
     }
 }

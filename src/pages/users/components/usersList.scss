@@ -2,6 +2,10 @@
     &__box {
         width: inherit;
         max-width: 256px;
+
+        &:last-child() {
+            margin-bottom: 30px;
+        }
     }
     &__image {
         width: inherit;
