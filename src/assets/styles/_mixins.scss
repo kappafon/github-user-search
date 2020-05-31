@@ -27,13 +27,13 @@
 }
 
 @mixin reverse-icon-animation {
-    transform: rotateZ(-180deg);
+    transform: rotateZ(135deg);
 
     transition: 0.2s;
     transition-timing-function: ease-in;
 }
 @mixin straight-icon-animation {
-    transform: rotateZ(0);
+    transform: rotateZ(45deg);
 
     transition: 0.2s;
     transition-timing-function: ease-in;

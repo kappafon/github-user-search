@@ -9,7 +9,6 @@ import Loading from '../../components/loading/loading'
 import { NetworkStatus } from 'apollo-client'
 import ErrorMessage from '../../components/error/error'
 
-const threshold = 50
 const ProfilePage: React.FunctionComponent = () => {
     const params = useParams()
     const value = params.value
@@ -19,13 +18,9 @@ const ProfilePage: React.FunctionComponent = () => {
     const profileCacheParsed = profileCache
         ? JSON.parse(profileCache)
         : {
-              visibleRepoCount: threshold,
-              orderBy: true,
+              ascOrder: true,
           }
-    const [ascOrder, setAscOrder] = React.useState<boolean>(profileCacheParsed.orderBy)
-
-    // const repoCount = sessionStorage.getItem(sessionStorageKey)
-    // const thresholdCount = repoCount ? JSON.parse(repoCount) : threshold
+    const [ascOrder, setAscOrder] = React.useState<boolean>(profileCacheParsed.ascOrder)
 
     const [getProfile, { data, loading, error, networkStatus, fetchMore, refetch }] = useLazyQuery(
         GET_PROFILE,
@@ -43,10 +38,8 @@ const ProfilePage: React.FunctionComponent = () => {
             },
         })
     }, [value])
-    console.log('ProfilePage:React.FunctionComponent -> data', data)
 
-    // if (networkStatus === 4) return <Loading loadingMessage="Refetching" />
-    // if (!data) return <Loading />
+    if (!data) return <Loading />
     if (
         loading &&
         networkStatus !== NetworkStatus.fetchMore &&
@@ -64,30 +57,14 @@ const ProfilePage: React.FunctionComponent = () => {
     const loadMore = () => {
         fetchMore({
             variables: {
-                // user: value,
-                // orderBy: ascOrder ? 'ASC' : 'DESC',
                 after: data.user.repositories.pageInfo.endCursor,
             },
             updateQuery: (prev, { fetchMoreResult }) => {
                 if (!fetchMoreResult) return prev
-                const result = {
-                    ...fetchMoreResult,
-                    user: {
-                        ...fetchMoreResult.user,
-                        repositories: {
-                            ...fetchMoreResult.user.repositories,
-                            nodes: [
-                                ...prev.user.repositories.nodes,
-                                ...fetchMoreResult.user.repositories.nodes,
-                            ],
-                        },
-                    },
-                }
                 sessionStorage.setItem(
                     sessionStorageKey,
                     JSON.stringify({
-                        visibleRepoCount: result.user.repositories.nodes.length,
-                        orderBy: ascOrder ? 'ASC' : 'DESC',
+                        ascOrder: ascOrder,
                     })
                 )
                 return {
@@ -110,34 +87,48 @@ const ProfilePage: React.FunctionComponent = () => {
     const onSortClick = () => {
         event.preventDefault()
         refetch({
-            // user: value,
             orderBy: ascOrder ? 'DESC' : 'ASC',
         })
+        sessionStorage.setItem(
+            sessionStorageKey,
+            JSON.stringify({
+                ascOrder: !ascOrder,
+            })
+        )
         setAscOrder(!ascOrder)
     }
+
+    const onScroll = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
+        event.preventDefault()
+        const target = event.currentTarget
+        if (Math.ceil(target.scrollTop + target.clientHeight + 500) >= target.scrollHeight) {
+            loadMore()
+        }
+    }
+
+    const shouldFetchMore =
+        data.user.repositories.pageInfo.hasNextPage && networkStatus !== NetworkStatus.fetchMore
+    console.log('data.user.repositories', data.user.repositories.totalCount)
+
     return (
-        <div className="profile__container">
-            {!profile ? (
-                <div>profile page</div>
-            ) : (
-                <section className="profile__card">
-                    <a href={profile.url} target="_blank" rel="noreferrer">
-                        <img src={profile.avatarUrl} width={256} />
+        <div className="profile__container" onScroll={shouldFetchMore ? onScroll : undefined}>
+            <section className="profile__card">
+                <a href={profile.url} target="_blank" rel="noreferrer">
+                    <img src={profile.avatarUrl} width={256} />
+                </a>
+                <div className="profile__info">
+                    <a
+                        href={profile.url}
+                        className="profile__info__login"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        <h2>{profile.login}</h2>
                     </a>
-                    <div className="profile__info">
-                        <a
-                            href={profile.url}
-                            className="profile__info__login"
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            <h2>{profile.login}</h2>
-                        </a>
-                        <div className="profile__info__email">{profile.email}</div>
-                        <ExternalLink url={profile.url} />
-                    </div>
-                </section>
-            )}
+                    <div className="profile__info__email">{profile.email}</div>
+                    <ExternalLink url={profile.url} />
+                </div>
+            </section>
             <RepoList
                 repos={repos}
                 onSortClick={onSortClick}
@@ -164,13 +155,6 @@ const GET_PROFILE = gql`
                     description
                     url
                 }
-                # edges {
-                #     node {
-                #         name
-                #         description
-                #         url
-                #     }
-                # }
                 pageInfo {
                     hasNextPage
                     endCursor

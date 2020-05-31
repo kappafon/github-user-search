@@ -7,6 +7,7 @@ import './usersPage.scss'
 import Loading from '../../components/loading/loading'
 import ErrorMessage from '../../components/error/error'
 import { NetworkStatus } from 'apollo-client'
+import { deDuplicateArray } from '../../utils/utils'
 
 const UsersPage: React.FunctionComponent = () => {
     const params = useParams()
@@ -45,27 +46,34 @@ const UsersPage: React.FunctionComponent = () => {
             },
             updateQuery: (prev, { fetchMoreResult }) => {
                 if (!fetchMoreResult) return prev
+                const unifiedArray = deDuplicateArray('login', [
+                    ...prev.search.nodes,
+                    ...fetchMoreResult.search.nodes,
+                ])
                 return {
                     ...fetchMoreResult,
                     search: {
                         ...fetchMoreResult.search,
-                        nodes: [...prev.search.nodes, ...fetchMoreResult.search.nodes],
+                        nodes: unifiedArray,
                     },
                 }
             },
         })
     }
 
+    const onScroll = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
+        event.preventDefault()
+        const target = event.currentTarget
+        if (Math.ceil(target.scrollTop + target.clientHeight + 500) >= target.scrollHeight) {
+            loadMoreUsers()
+        }
+    }
+
+    const shouldFetchMore =
+        data.search.pageInfo.hasNextPage && networkStatus !== NetworkStatus.fetchMore
+
     return (
-        <div className="users__container">
-            {data.search.pageInfo.hasNextPage && (
-                <button
-                    disabled={networkStatus === NetworkStatus.fetchMore}
-                    onClick={loadMoreUsers}
-                >
-                    Load More
-                </button>
-            )}
+        <div className="users__container" onScroll={shouldFetchMore ? onScroll : undefined}>
             <p>{data.search.userCount} user(s) found</p>
             <UsersList users={users} />
         </div>

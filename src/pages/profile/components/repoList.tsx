@@ -28,15 +28,6 @@ const RepoList: React.FunctionComponent<RepoListProps> = (props) => {
             <h2 className="repo-list__title" onClick={onSortClick}>
                 Repositories <FaLongArrowAltUp size="14px" className={arrowIconClassName} />
             </h2>
-            {props.pageInfo && props.pageInfo.hasNextPage && (
-                // <div onClick={props.loadMore}>load more</div>
-                <button
-                    // disabled={networkStatus === NetworkStatus.fetchMore}
-                    onClick={props.loadMore}
-                >
-                    Load More
-                </button>
-            )}
             <div className="repo-list__container">
                 {props.repos.map((repo, index) => {
                     const { name, description, url } = repo
