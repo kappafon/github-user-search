@@ -2,6 +2,10 @@
 
 > React / typescript app to lookup Github profiles via new GH v4 API using graphql.
 
+User and Profile pages feature 'infinite scroll'
+
+Queries are cached so searching for the same user or clicking the same profile will quickly display previousely fetched data
+
 ## Usage
 
 ### `yarn install`
@@ -19,7 +23,8 @@ TODO:
 -   Back Button, Scroll to Top, Logout
 -   Add more useful info about specific user profile and repos, possibly implement 'settings' to preselect what info to fetch on search
 -   Dark mode ofc
+-   Virtualisation
 -   host the app on gh pages, env sepparation
 -   write some tests
 
-![Alt text](/src/assets/images/demo.gif?raw=true 'Optional Title')
+![Alt text](/src/assets/images/demo-update.gif?raw=true 'Optional Title')
