@@ -6,10 +6,8 @@ import { FaLongArrowAltUp } from 'react-icons/fa'
 
 export interface RepoListProps {
     repos?: Array<any>
-    pageInfo?: any
     ascOrder?: boolean
     onSortClick?(): void
-    loadMore?(): void
 }
 
 const RepoList: React.FunctionComponent<RepoListProps> = (props) => {

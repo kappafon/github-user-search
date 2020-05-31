@@ -69,11 +69,9 @@ const UsersPage: React.FunctionComponent = () => {
     return (
         <>
             <Info message={`${userCount} user(s) found`} />
-            {/* <div> */}
             <div className="users__container" onScroll={shouldFetchMore ? onScroll : undefined}>
                 <UsersList users={users} />
             </div>
-            {/* </div> */}
         </>
     )
 }

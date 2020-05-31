@@ -8,6 +8,7 @@ import ExternalLink from '../../components/externalLink/externalLink'
 import Loading from '../../components/loading/loading'
 import { NetworkStatus } from 'apollo-client'
 import ErrorMessage from '../../components/errorMessage/errorMessage'
+import Info from '../../components/info/info'
 
 const ProfilePage: React.FunctionComponent = () => {
     const params = useParams()
@@ -50,14 +51,15 @@ const ProfilePage: React.FunctionComponent = () => {
     }
     if (error) return <ErrorMessage message={error.message} />
 
-    const profile = data && data.user ? data.user : null
-    const repos = profile ? profile.repositories.nodes : []
-    const pageInfo = profile ? profile.repositories.pageInfo : null
+    const { avatarUrl, email, login, url } = data.user
+    const { totalCount, nodes } = data.user.repositories
+    const { hasNextPage, endCursor } = data.user.repositories.pageInfo
+    const repos = nodes
 
     const loadMore = () => {
         fetchMore({
             variables: {
-                after: data.user.repositories.pageInfo.endCursor,
+                after: endCursor,
             },
             updateQuery: (prev, { fetchMoreResult }) => {
                 if (!fetchMoreResult) return prev
@@ -106,42 +108,37 @@ const ProfilePage: React.FunctionComponent = () => {
         }
     }
 
-    const shouldFetchMore =
-        data.user.repositories.pageInfo.hasNextPage && networkStatus !== NetworkStatus.fetchMore
-    console.log('data.user.repositories', data.user.repositories.totalCount)
+    const shouldFetchMore = hasNextPage && networkStatus !== NetworkStatus.fetchMore
 
     return (
-        <div className="profile__container" onScroll={shouldFetchMore ? onScroll : undefined}>
-            <section className="profile__card">
-                <a
-                    href={profile.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="profile__card__image-link"
-                >
-                    <img src={profile.avatarUrl} width={256} />
-                </a>
-                <div className="profile__info">
+        <>
+            <Info message={`${login} has ${totalCount} repositories in total`} />
+            <div className="profile__container" onScroll={shouldFetchMore ? onScroll : undefined}>
+                <section className="profile__card">
                     <a
-                        href={profile.url}
-                        className="profile__info__login"
+                        href={url}
                         target="_blank"
                         rel="noreferrer"
+                        className="profile__card__image-link"
                     >
-                        <h2>{profile.login}</h2>
+                        <img src={avatarUrl} width={256} />
                     </a>
-                    <div className="profile__info__email">{profile.email}</div>
-                    <ExternalLink url={profile.url} />
-                </div>
-            </section>
-            <RepoList
-                repos={repos}
-                onSortClick={onSortClick}
-                loadMore={loadMore}
-                ascOrder={ascOrder}
-                pageInfo={pageInfo}
-            />
-        </div>
+                    <div className="profile__info">
+                        <a
+                            href={url}
+                            className="profile__info__login"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <h2>{login}</h2>
+                        </a>
+                        <div className="profile__info__email">{email}</div>
+                        <ExternalLink url={url} />
+                    </div>
+                </section>
+                <RepoList repos={repos} onSortClick={onSortClick} ascOrder={ascOrder} />
+            </div>
+        </>
     )
 }
 export default ProfilePage
