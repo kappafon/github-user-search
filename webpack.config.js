@@ -2,7 +2,10 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-    entry: path.resolve(__dirname, 'src', 'index.tsx'),
+    entry: {
+        app: path.resolve(__dirname, 'src', 'index.tsx'),
+        noflash: './src/noflash.js',
+    },
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],
     },

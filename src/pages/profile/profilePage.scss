@@ -41,10 +41,12 @@
             margin: 0 0 10px;
         }
         &__login {
-            color: #269f42;
+            color: var(--primary-color);
             text-decoration: none;
             h2 {
                 margin-bottom: 10px;
+
+                color: var(--primary-color);
             }
         }
     }

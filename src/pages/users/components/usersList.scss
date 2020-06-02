@@ -3,6 +3,10 @@
         width: inherit;
         max-width: 256px;
 
+        color: var(--primary-color);
+
+        text-decoration: none;
+
         &:last-child() {
             margin-bottom: 30px;
         }

@@ -30,13 +30,17 @@ body {
     margin: 0;
     padding: 0;
 
+    color: var(--text-color);
+
     font-family: var(--primary-font);
+
+    transition: background-color 0.3s ease;
 
     #root {
         height: 100%;
         overflow: hidden;
 
-        background-color: #f6f8fa;
+        background-color: var(--primary-bg-color);
     }
 
     .reverse-icon {
@@ -50,4 +54,19 @@ body {
     [hidden] {
         display: none !important;
     }
+
+    // external hyperlink style
+    #{$a-external-href,
+    $a-external-mail } {
+        @extend %external-links;
+    }
+}
+
+body.dark-mode {
+    --primary-bg-color: #1f2124;
+    --secondary-bg-color: #24292e;
+    --tetriary-bg-color: #3a435e;
+    --text-color: #fefefe;
+    --info-text-color: #dbedff;
+    --box-shadow-color: transparent;
 }

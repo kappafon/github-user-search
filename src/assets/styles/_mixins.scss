@@ -38,3 +38,10 @@
     transition: 0.2s;
     transition-timing-function: ease-in;
 }
+
+// links/drill styles
+%external-links {
+    color: var(--external-hyperlink);
+
+    cursor: pointer;
+}

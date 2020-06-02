@@ -8,3 +8,7 @@ $gray: #4d4d4f;
 $white: #fefefe;
 $blue: #094ab2;
 $green: #207245;
+
+/* Link Selectors */
+$a-external-href: 'a[href^="http"], a:active[href^="http"], a:visited[href^="http"]';
+$a-external-mail: 'a[href^="mail"], a:active[href^="mail"], a:visited[href^="mail"]';

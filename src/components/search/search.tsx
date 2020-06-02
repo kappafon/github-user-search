@@ -3,6 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { FaSearch } from 'react-icons/fa'
 import classNames from 'classnames'
 import './search.scss'
+import DarkModeToggle from '../darkModeToggle/darkModeToggle'
 
 const Search: React.FunctionComponent = () => {
     const history = useHistory()
@@ -38,6 +39,7 @@ const Search: React.FunctionComponent = () => {
             >
                 <FaSearch fontSize="16px" />
             </button>
+            <DarkModeToggle />
         </form>
     )
 }

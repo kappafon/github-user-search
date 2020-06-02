@@ -6,11 +6,11 @@
         margin: -12px auto 10px;
         padding: 8px 0;
 
-        color: #032f62;
+        color: var(--info-text-color);
 
-        background-color: #dbedff;
+        background-color: var(--tetriary-bg-color);
         border: 1px solid rgba(27, 31, 35, 0.15);
-        box-shadow: 0 2px 4px #dbedff;
+        box-shadow: 0 2px 4px var(--tetriary-bg-color);
     }
     &__message {
         @include layout-limit;

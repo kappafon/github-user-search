@@ -1,4 +1,5 @@
 import 'core-js/stable'
+import noFlash from './noflash.js'
 import React from 'react'
 import ReactDom from 'react-dom'
 import { ApolloClient } from 'apollo-client'
@@ -13,6 +14,7 @@ import { setContext } from 'apollo-link-context'
 import './index.scss'
 import Loading from './components/loading/loading'
 
+noFlash()
 const typeDefs = gql`
     extend type Query {
         isLoggedIn: Boolean!
