@@ -11,10 +11,41 @@ import { USERS_PAGE } from '../../assets/strings/strings'
 import './usersPage.scss'
 import Info from '../../components/info/info'
 
+//#region Interfaces
+interface SearchUsersVars {
+    user?: string
+    after?: string
+}
+
+interface PageInfo {
+    hasNextPage: boolean
+    endCursor: string
+}
+
+interface UsersInfo {
+    login: string
+    avatarUrl: string
+}
+
+interface Users {
+    userCount: number
+    nodes: Array<UsersInfo>
+    pageInfo: PageInfo
+}
+
+interface SearchUsersData {
+    search: Users
+}
+
+//#endregion Interfaces
+
 const UsersPage: React.FunctionComponent = () => {
     const params = useParams()
     const userQuery = params.value
-    const [getUsers, { data, error, loading, networkStatus, fetchMore }] = useLazyQuery(GET_USERS, {
+    const [getUsers, { data, error, loading, networkStatus, fetchMore }] = useLazyQuery<
+        SearchUsersData,
+        SearchUsersVars
+    >(GET_USERS, {
         notifyOnNetworkStatusChange: true,
     })
     const { userNotFound } = USERS_PAGE
@@ -78,7 +109,7 @@ const UsersPage: React.FunctionComponent = () => {
 export default UsersPage
 
 const GET_USERS = gql`
-    query user($user: String!, $after: String) {
+    query getUserProfile($user: String!, $after: String) {
         search(query: $user, type: USER, first: 100, after: $after) {
             userCount
             nodes {

@@ -10,6 +10,49 @@ import { NetworkStatus } from 'apollo-client'
 import ErrorMessage from '../../components/errorMessage/errorMessage'
 import Info from '../../components/info/info'
 
+//#region Interfaces
+export enum OrderBy {
+    Ascending = 'ASC',
+    Descending = 'DESC',
+}
+
+interface UserVars {
+    user?: string
+    orderBy?: OrderBy
+    after?: string
+}
+
+interface PageInfo {
+    hasNextPage: boolean
+    endCursor: string
+}
+
+interface RepositoryInfo {
+    name: string
+    description: string
+    url: string
+}
+
+interface RepositoriesInfo {
+    totalCount: number
+    nodes: Array<RepositoryInfo>
+    pageInfo: PageInfo
+}
+
+interface UserGeneralInfo {
+    avatarUrl: string
+    email: string
+    login: string
+    url: string
+    repositories: RepositoriesInfo
+}
+
+interface UserData {
+    user: UserGeneralInfo
+}
+
+//#endregion Interfaces
+
 const ProfilePage: React.FunctionComponent = () => {
     const params = useParams()
     const value = params.value
@@ -19,22 +62,22 @@ const ProfilePage: React.FunctionComponent = () => {
     const profileCacheParsed = profileCache
         ? JSON.parse(profileCache)
         : {
-              ascOrder: true,
+              sortOrder: OrderBy.Ascending,
           }
-    const [ascOrder, setAscOrder] = React.useState<boolean>(profileCacheParsed.ascOrder)
+    const [sortOrder, setsortOrder] = React.useState<OrderBy>(profileCacheParsed.sortOrder)
 
-    const [getProfile, { data, loading, error, networkStatus, fetchMore, refetch }] = useLazyQuery(
-        GET_PROFILE,
-        {
-            notifyOnNetworkStatusChange: true,
-            partialRefetch: true,
-        }
-    )
+    const [getProfile, { data, loading, error, networkStatus, fetchMore, refetch }] = useLazyQuery<
+        UserData,
+        UserVars
+    >(GET_PROFILE, {
+        notifyOnNetworkStatusChange: true,
+        partialRefetch: true,
+    })
     React.useEffect(() => {
         getProfile({
             variables: {
                 user: value,
-                orderBy: ascOrder ? 'ASC' : 'DESC',
+                orderBy: sortOrder === OrderBy.Ascending ? OrderBy.Ascending : OrderBy.Descending,
                 after: null,
             },
         })
@@ -66,7 +109,7 @@ const ProfilePage: React.FunctionComponent = () => {
                 sessionStorage.setItem(
                     sessionStorageKey,
                     JSON.stringify({
-                        ascOrder: ascOrder,
+                        sortOrder: sortOrder,
                     })
                 )
                 return {
@@ -87,17 +130,18 @@ const ProfilePage: React.FunctionComponent = () => {
     }
 
     const onSortClick = () => {
+        const newOrder = sortOrder === OrderBy.Ascending ? OrderBy.Descending : OrderBy.Ascending
         event.preventDefault()
         refetch({
-            orderBy: ascOrder ? 'DESC' : 'ASC',
+            orderBy: newOrder,
         })
         sessionStorage.setItem(
             sessionStorageKey,
             JSON.stringify({
-                ascOrder: !ascOrder,
+                sortOrder: newOrder,
             })
         )
-        setAscOrder(!ascOrder)
+        setsortOrder(newOrder)
     }
 
     const onScroll = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
@@ -136,7 +180,7 @@ const ProfilePage: React.FunctionComponent = () => {
                         <ExternalLink url={url} />
                     </div>
                 </section>
-                <RepoList repos={repos} onSortClick={onSortClick} ascOrder={ascOrder} />
+                <RepoList repos={repos} onSortClick={onSortClick} sortOrder={sortOrder} />
             </div>
         </>
     )
@@ -144,7 +188,7 @@ const ProfilePage: React.FunctionComponent = () => {
 export default ProfilePage
 
 const GET_PROFILE = gql`
-    query user($user: String!, $orderBy: String!, $after: String) {
+    query getUserProfile($user: String!, $orderBy: String!, $after: String) {
         user(login: $user) {
             avatarUrl
             email

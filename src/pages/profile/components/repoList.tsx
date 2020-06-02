@@ -3,22 +3,23 @@ import classNames from 'classnames'
 import './repoList.scss'
 import ExternalLink from '../../../components/externalLink/externalLink'
 import { FaLongArrowAltUp } from 'react-icons/fa'
+import { OrderBy } from '../profilePage'
 
 export interface RepoListProps {
     repos?: Array<any>
-    ascOrder?: boolean
+    sortOrder?: OrderBy
     onSortClick?(): void
 }
 
 const RepoList: React.FunctionComponent<RepoListProps> = (props) => {
-    const { ascOrder } = props
+    const { sortOrder } = props
     const onSortClick = (event: React.MouseEvent<HTMLHeadingElement, MouseEvent>) => {
         event.preventDefault()
         props.onSortClick()
     }
     const arrowIconClassName = classNames('repo-list__title__icon', {
-        'straight-icon': ascOrder,
-        'reverse-icon': !ascOrder,
+        'straight-icon': sortOrder === OrderBy.Ascending,
+        'reverse-icon': sortOrder === OrderBy.Descending,
     })
 
     return (

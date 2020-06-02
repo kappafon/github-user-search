@@ -1,8 +1,21 @@
 .dark-mode-toggle {
     position: absolute;
-    right: -60px;
+    top: 0;
+    right: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     width: 40px;
 
     height: 40px;
+
+    background: var(--primary-bg-color);
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0.8;
+    &:hover {
+        opacity: 1;
+    }
 }

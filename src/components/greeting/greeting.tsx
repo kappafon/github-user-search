@@ -6,8 +6,19 @@ import ErrorMessage from '../errorMessage/errorMessage'
 import { GREETING } from '../../assets/strings/strings'
 import './greeting.scss'
 
+//#region Interfaces
+interface ViewerLogin {
+    login: string
+}
+
+interface ViewerLoginData {
+    viewer: ViewerLogin
+}
+
+//#endregion Interfaces
+
 const Greeting: React.FunctionComponent = () => {
-    const { loading, error, data } = useQuery(VIEWER)
+    const { loading, error, data } = useQuery<ViewerLoginData>(VIEWER)
 
     if (loading) return <Loading />
     if (error) return <ErrorMessage message={error.message} />
@@ -18,7 +29,7 @@ const Greeting: React.FunctionComponent = () => {
 export default Greeting
 
 const VIEWER = gql`
-    {
+    query getViewerLoginName {
         viewer {
             login
         }
