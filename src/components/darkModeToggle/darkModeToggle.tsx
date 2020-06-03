@@ -1,10 +1,11 @@
 import React from 'react'
 import useDarkMode from 'use-dark-mode'
-import { FaSun, FaMoon } from 'react-icons/fa'
+import { FaMoon, FaSun } from 'react-icons/fa'
 import './darkModeToggle.scss'
 
 const DarkModeToggle: React.FunctionComponent = () => {
     const darkMode = useDarkMode()
+
     return (
         <div onClick={darkMode.toggle} className="dark-mode-toggle">
             {darkMode.value ? (

@@ -1,9 +1,12 @@
 import React from 'react'
 import './loading.scss'
 
+//#region Interfaces
 export interface LoadingProps {
     loadingMessage?: string
 }
+
+//#endregion Interfaces
 
 const Loading: React.FunctionComponent<LoadingProps> = (props) => {
     const { loadingMessage } = props

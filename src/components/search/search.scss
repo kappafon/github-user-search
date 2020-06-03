@@ -1,23 +1,32 @@
 @import '../../assets/styles/functions';
+@import '../../assets/styles/mixins';
+
 .search {
     &__container {
-        // position: relative;
-
         display: flex;
     }
     &__box {
         width: 100%;
         padding: 10px;
 
+        color: var(--text-color);
+
         font-size: px-to-rem(14px);
 
-        border: 1px solid #e9e9e9;
+        background-color: var(--secondary-bg-color);
+
+        border: 1px solid var(--search-border-color);
         border-right: 0;
         border-radius: 6px 0 0 6px;
 
         &:focus {
-            border-color: #d0d0d0;
+            border-color: var(--search-border-focused-color);
             outline: 0;
+        }
+        &::placeholder {
+            color: var(--search-border-focused-color);
+
+            opacity: 1; /* Firefox */
         }
     }
 
@@ -27,30 +36,18 @@
         pointer-events: none;
     }
     &__button {
+        @include button-base;
+
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 4px 16px;
 
-        color: var(--white-color);
         font-size: px-to-rem(16px);
 
-        background-color: var(--primary-color);
-        background-image: linear-gradient(-180deg, #34d058, #28a745 90%);
         border: 0;
 
         border-radius: 0 6px 6px 0;
         outline: 0;
-        cursor: pointer;
-        &:hover {
-            background-color: var(--primary-color-hover);
-            background-image: linear-gradient(-180deg, #2fcb53, #269f42 90%);
-            background-position: -0.5em;
-        }
-        &:active {
-            background-color: var(--primary-color-active);
-            background-image: none;
-            box-shadow: inset 0 0.15em 0.3em rgba(27, 31, 35, 0.15);
-        }
     }
 }

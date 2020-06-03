@@ -1,13 +1,15 @@
-import React from 'react'
 import ApolloClient from 'apollo-client'
-import { useApolloClient } from '@apollo/react-hooks'
-import { FaGithubAlt } from 'react-icons/fa'
-import './login.scss'
 import Loading from '../../components/loading/loading'
+import React from 'react'
+import { LOGIN } from '../../assets/strings/strings'
+import { FaGithubAlt } from 'react-icons/fa'
+import { useApolloClient } from '@apollo/react-hooks'
+import './login.scss'
 
 const Login: React.FunctionComponent = () => {
     const client: ApolloClient<any> = useApolloClient()
     const [loading, setLoading] = React.useState<boolean>(!!localStorage.getItem('github_token'))
+    const { login, description, appName } = LOGIN
 
     React.useEffect(() => {
         if (localStorage.getItem('github_token')) {
@@ -36,10 +38,10 @@ const Login: React.FunctionComponent = () => {
                 <div className="login__container">
                     <div className="login__box">
                         <FaGithubAlt size="4em" className="login__logo-image" />
-                        <h2 className="login__box__title">GitHub User Finder</h2>
-                        <div>To start looking up users, please login.</div>
+                        <h2 className="login__box__title">{appName}</h2>
+                        <div>{description}</div>
                         <a className="login__button" href={LOGIN_URI}>
-                            Login
+                            {login}
                         </a>
                     </div>
                 </div>

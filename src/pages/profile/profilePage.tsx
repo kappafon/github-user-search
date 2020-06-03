@@ -1,14 +1,14 @@
+import ErrorMessage from '../../components/errorMessage/errorMessage'
+import ExternalLink from '../../components/externalLink/externalLink'
+import gql from 'graphql-tag'
+import Info from '../../components/info/info'
+import Loading from '../../components/loading/loading'
 import React from 'react'
+import RepoList from './components/repoList'
+import { NetworkStatus } from 'apollo-client'
 import { useLazyQuery } from '@apollo/react-hooks'
 import { useParams } from 'react-router-dom'
-import gql from 'graphql-tag'
-import RepoList from './components/repoList'
 import './profilePage.scss'
-import ExternalLink from '../../components/externalLink/externalLink'
-import Loading from '../../components/loading/loading'
-import { NetworkStatus } from 'apollo-client'
-import ErrorMessage from '../../components/errorMessage/errorMessage'
-import Info from '../../components/info/info'
 
 //#region Interfaces
 export enum OrderBy {
@@ -27,7 +27,7 @@ interface PageInfo {
     endCursor: string
 }
 
-interface RepositoryInfo {
+export interface RepositoryInfo {
     name: string
     description: string
     url: string

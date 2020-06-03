@@ -1,8 +1,7 @@
-import React from 'react'
-
-import './externalLink.scss'
 import classNames from 'classnames'
+import React from 'react'
 import { FaExternalLinkAlt } from 'react-icons/fa'
+import './externalLink.scss'
 
 //#region Interfaces
 export interface ExternalLinkProps {

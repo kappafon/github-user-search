@@ -1,18 +1,24 @@
-import React from 'react'
 import classNames from 'classnames'
-import './repoList.scss'
 import ExternalLink from '../../../components/externalLink/externalLink'
+import React from 'react'
+import { OrderBy, RepositoryInfo } from '../profilePage'
 import { FaLongArrowAltUp } from 'react-icons/fa'
-import { OrderBy } from '../profilePage'
+import { PROFILE_PAGE } from '../../../assets/strings/strings'
+import './repoList.scss'
 
+//#region Interfaces
 export interface RepoListProps {
-    repos?: Array<any>
-    sortOrder?: OrderBy
-    onSortClick?(): void
+    repos: Array<RepositoryInfo>
+    sortOrder: OrderBy
+    onSortClick(): void
 }
 
+//#endregion Interfaces
+
 const RepoList: React.FunctionComponent<RepoListProps> = (props) => {
+    const { repositories } = PROFILE_PAGE
     const { sortOrder } = props
+
     const onSortClick = (event: React.MouseEvent<HTMLHeadingElement, MouseEvent>) => {
         event.preventDefault()
         props.onSortClick()
@@ -25,7 +31,7 @@ const RepoList: React.FunctionComponent<RepoListProps> = (props) => {
     return (
         <>
             <h2 className="repo-list__title" onClick={onSortClick}>
-                Repositories <FaLongArrowAltUp size="14px" className={arrowIconClassName} />
+                {repositories} <FaLongArrowAltUp size="14px" className={arrowIconClassName} />
             </h2>
             <div className="repo-list__container">
                 {props.repos.map((repo, index) => {

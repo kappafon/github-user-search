@@ -1,9 +1,9 @@
-import React from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
-import { FaSearch } from 'react-icons/fa'
 import classNames from 'classnames'
-import './search.scss'
 import DarkModeToggle from '../darkModeToggle/darkModeToggle'
+import React from 'react'
+import { FaSearch } from 'react-icons/fa'
+import { useHistory, useLocation } from 'react-router-dom'
+import './search.scss'
 
 const Search: React.FunctionComponent = () => {
     const history = useHistory()

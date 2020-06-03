@@ -1,8 +1,9 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import Search from '../search/search'
-import './header.scss'
+import { APP_TITLE } from '../../assets/strings/strings'
 import { FaGithub } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
+import './header.scss'
 
 const header: React.FunctionComponent = () => {
     return (
@@ -11,7 +12,7 @@ const header: React.FunctionComponent = () => {
                 <h1 className="header__title">
                     <Link to="/" className="header__home-link">
                         <FaGithub size={32} className="header__logo-image" />
-                        GitHub User Finder
+                        {APP_TITLE}
                     </Link>
                 </h1>
                 <Search />

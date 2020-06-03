@@ -1,17 +1,25 @@
 import React from 'react'
+import { UsersInfo } from '../usersPage'
 import { Link } from 'react-router-dom'
+import { USERS_PAGE } from '../../../assets/strings/strings'
 import './usersList.scss'
 
+//#region Interfaces
 export interface UsersListProps {
-    users?: Array<any>
+    users: Array<UsersInfo>
 }
 
+//#endregion Interfaces
+
 const UsersList: React.FunctionComponent<UsersListProps> = (props) => {
+    const { userImageAlt } = USERS_PAGE
+    const { users } = props
+
     return (
         <>
-            {props.users.map((user) => {
+            {users.map((user) => {
                 const { login, avatarUrl } = user
-                const alt = `${login}'s profile picture.`
+                const alt = `${login}${userImageAlt}`
                 return (
                     <Link key={login} to={'/profile/' + login} className="user__box">
                         <img className="user__image" src={avatarUrl} alt={alt} width={128} />

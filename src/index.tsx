@@ -1,18 +1,19 @@
 import 'core-js/stable'
+import App from './pages/app'
+import ErrorMessage from './components/errorMessage/errorMessage'
+import gql from 'graphql-tag'
+import Loading from './components/loading/loading'
+import Login from './pages/login/login'
 import noFlash from './noflash.js'
 import React from 'react'
 import ReactDom from 'react-dom'
 import { ApolloClient } from 'apollo-client'
 import { ApolloProvider, useQuery } from '@apollo/react-hooks'
+import { BrowserRouter } from 'react-router-dom'
 import { createHttpLink } from 'apollo-link-http'
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory'
-import gql from 'graphql-tag'
-import Login from './pages/login/login'
-import App from './pages/app'
-import { BrowserRouter } from 'react-router-dom'
 import { setContext } from 'apollo-link-context'
 import './index.scss'
-import Loading from './components/loading/loading'
 
 noFlash()
 const typeDefs = gql`
@@ -56,7 +57,7 @@ cache.writeData({
 function IsLoggedIn() {
     const { data, error, loading } = useQuery(IS_LOGGED_IN)
     if (loading) return <Loading />
-    if (error) return <p>Error</p>
+    if (error) return <ErrorMessage message={error.message} />
 
     return data.isLoggedIn ? <App /> : <Login />
 }

@@ -1,15 +1,15 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
-import { useLazyQuery } from '@apollo/react-hooks'
-import { NetworkStatus } from 'apollo-client'
-import gql from 'graphql-tag'
-import Loading from '../../components/loading/loading'
 import ErrorMessage from '../../components/errorMessage/errorMessage'
+import gql from 'graphql-tag'
+import Info from '../../components/info/info'
+import Loading from '../../components/loading/loading'
+import React from 'react'
 import UsersList from './components/usersList'
 import { deDuplicateArray } from '../../utils/utils'
 import { USERS_PAGE } from '../../assets/strings/strings'
+import { NetworkStatus } from 'apollo-client'
+import { useLazyQuery } from '@apollo/react-hooks'
+import { useParams } from 'react-router-dom'
 import './usersPage.scss'
-import Info from '../../components/info/info'
 
 //#region Interfaces
 interface SearchUsersVars {
@@ -22,7 +22,7 @@ interface PageInfo {
     endCursor: string
 }
 
-interface UsersInfo {
+export interface UsersInfo {
     login: string
     avatarUrl: string
 }
@@ -101,7 +101,9 @@ const UsersPage: React.FunctionComponent = () => {
         <>
             <Info message={`${userCount} user(s) found`} />
             <div className="users__container" onScroll={shouldFetchMore ? onScroll : undefined}>
-                <UsersList users={users} />
+                <div className="users__container__user-list">
+                    <UsersList users={users} />
+                </div>
             </div>
         </>
     )
