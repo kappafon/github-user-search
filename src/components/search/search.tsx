@@ -5,6 +5,8 @@ import { FaSearch } from 'react-icons/fa'
 import { useHistory, useLocation } from 'react-router-dom'
 import './search.scss'
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 const Search: React.FunctionComponent = () => {
     const history = useHistory()
     const location = useLocation()
@@ -17,9 +19,9 @@ const Search: React.FunctionComponent = () => {
     const onSubmitClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault()
         const currentPath = location.pathname
-        const newPath = `/users/${value}`
+        const newPath = isProduction ? `/github-user-search/users/${value}` : `/users/${value}`
         if (currentPath === newPath) return
-        history.push(`/users/${value}`)
+        history.push(newPath)
     }
     const searchButtonClassName = classNames('search__button', { disabled: value.length === 0 })
     return (
